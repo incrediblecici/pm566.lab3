@@ -1,6 +1,6 @@
 ---
-title: ""
-author: ""
+title: "pm566lab3"
+author: "Weixi Pan"
 format:
   html:
     embed-resources: true
@@ -15,14 +15,84 @@ Quarto enables you to weave together content and executable code into a finished
 When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
 
 ```{r}
-1 + 1
+
+download.file(
+  "https://raw.githubusercontent.com/USCbiostats/data-science-data/master/02_met/met_all.gz",
+  destfile = file.path("~", "Downloads", "met_all.gz"),
+  method   = "libcurl",
+  timeout  = 60
+)
+
+met <- data.table::fread(file.path("~", "Downloads", "met_all.gz"))
 ```
+
 
 You can add options to executable code like this
 
 ```{r}
-#| echo: false
-2 * 2
+dim (met)
+##[1] 2377343      30 (2,377,343rows and 30 columns)
+head(met)
+tail(met)
+```
+
+```{r}
+str(met)
+```
+
+```{r}
+table(met$year)
+##   2019 
+##2377343 
+table(met$day)
+table(met$hour)
+summary(met$temp)
+summary(met$elev)
+summary(met$wind.sp)
+met[met$elev==9999.0] <- NA
+summary(met$elev)
+met <- met[temp>-40]
+met2 <- met[order(temp)]
+head(met2)
+```
+
+```{r}
+met <- met[temp>-15]
+met2 <- met[order(temp)]
+head(met2)
+```
+
+```{r}
+elev <- met[elev==max(elev), ]
+summary(elev)
+cor(elev$temp, elev$wind.sp, use="complete")
+## [1] -0.09373843
+cor(elev$temp, elev$hour, use="complete")
+## [1] 0.4397261
+cor(elev$wind.sp, elev$day, use="complete")
+## [1] 0.3643079
+cor(elev$wind.sp, elev$hour, use="complete")
+## [1] 0.08807315
+cor(elev$temp, elev$day, use="complete")
+## [1] -0.003857766
+```
+
+```{r}
+hist(met$elev, breaks=100)
+hist(met$temp)
+hist(met$wind.sp)
+library(leaflet)
+library(magrittr)
+leaflet(elev) %>%
+  addProviderTiles('OpenStreetMap') %>% 
+  addCircles(lat=~lat,lng=~lon, opacity=1, fillOpacity=1, radius=100)
+library(lubridate)
+elev$date <- with(elev, ymd_h(paste(year, month, day, hour, sep= ' ')))
+summary(elev$date)
+elev <- elev[order(date)]
+head(elev)
+plot(elev$date, elev$temp, type='l')
+plot(elev$date, elev$wind.sp, type='l')
 ```
 
 The `echo: false` option disables the printing of code (only output is displayed).
