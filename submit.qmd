@@ -22,7 +22,7 @@ download.file(
   method   = "libcurl",
   timeout  = 60
 )
-
+library(R.utils)
 met <- data.table::fread(file.path("~", "met_all.gz"))
 ```
 
