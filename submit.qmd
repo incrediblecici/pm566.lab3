@@ -18,7 +18,7 @@ When you click the **Render** button a document will be generated that includes 
 
 download.file(
   "https://raw.githubusercontent.com/USCbiostats/data-science-data/master/02_met/met_all.gz",
-  destfile = file.path("~", "Downloads", "met_all.gz"),
+  destfile = file.path("~", "met_all.gz"),
   method   = "libcurl",
   timeout  = 60
 )
