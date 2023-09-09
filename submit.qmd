@@ -23,7 +23,7 @@ download.file(
   timeout  = 60
 )
 
-met <- data.table::fread(file.path("~", "Downloads", "met_all.gz"))
+met <- data.table::fread(file.path("~", "met_all.gz"))
 ```
 
 
