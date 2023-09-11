@@ -95,4 +95,9 @@ plot(elev$date, elev$temp, type='l')
 plot(elev$date, elev$wind.sp, type='l')
 ```
 
+```{r}
+barplot(table(met$wind.sp))
+barplot(table(met$elev))
+```
+
 The `echo: false` option disables the printing of code (only output is displayed).
